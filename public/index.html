@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VentureHub — Where Ideas Meet Capital</title>
+  <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@500;600;700&family=Satoshi:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ── Cursor glow ───────────────────────────────────────────── -->
+  <div class="cursor-glow" id="cursor-glow"></div>
+
+  <!-- ── Noise overlay ─────────────────────────────────────────── -->
+  <div class="noise"></div>
+
+  <!-- ── NAV ───────────────────────────────────────────────────── -->
+  <nav id="main-nav">
+    <div class="brand" onclick="showPage('home')">
+      <span class="brand-icon">⬡</span>VentureHub
+    </div>
+    <div class="nav-tabs">
+      <button class="tab-btn active" onclick="showPage('home')">Home</button>
+      <button class="tab-btn" onclick="showPage('browse')">
+        Explore <span class="badge" id="count-badge">0</span>
+      </button>
+      <button class="tab-btn" onclick="showPage('submit')">Pitch Idea</button>
+      <button class="tab-btn" onclick="showPage('investors')">Investors</button>
+      <button class="tab-btn" onclick="showPage('dashboard')">Dashboard</button>
+    </div>
+    <button class="nav-cta" onclick="showPage('submit')">+ List Startup</button>
+  </nav>
+
+  <!-- ────────────────────────────────────────────────────────────
+       PAGE 1: HOME
+  ──────────────────────────────────────────────────────────────── -->
+  <div id="page-home" class="page active">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-bg-grid"></div>
+      <div class="hero-orb orb-1"></div>
+      <div class="hero-orb orb-2"></div>
+
+      <div class="hero-content">
+        <div class="hero-pill">
+          <span class="pill-dot"></span> India's early-stage platform
+        </div>
+        <h1 class="hero-title">
+          Where <em>bold ideas</em><br/>find the right capital
+        </h1>
+        <p class="hero-sub">
+          A curated space for founders to pitch their vision and for investors to discover tomorrow's unicorns — before anyone else does.
+        </p>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="showPage('submit')">
+            <span>Pitch your startup</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          <button class="btn-ghost" onclick="showPage('browse')">Explore startups</button>
+        </div>
+      </div>
+
+      <!-- Floating stat cards -->
+      <div class="hero-stats">
+        <div class="stat-float stat-float--1">
+          <div class="sf-icon">🚀</div>
+          <div class="sf-num" id="stat-startups">0</div>
+          <div class="sf-lbl">Startups</div>
+        </div>
+        <div class="stat-float stat-float--2">
+          <div class="sf-icon">💰</div>
+          <div class="sf-num" id="stat-funding">₹0L</div>
+          <div class="sf-lbl">Funding sought</div>
+        </div>
+        <div class="stat-float stat-float--3">
+          <div class="sf-icon">❤️</div>
+          <div class="sf-num" id="stat-interest">0</div>
+          <div class="sf-lbl">Interests</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Featured startups strip -->
+    <section class="featured-section">
+      <div class="section-header">
+        <h2>Featured This Week</h2>
+        <button class="link-btn" onclick="showPage('browse')">See all →</button>
+      </div>
+      <div class="featured-strip" id="featured-strip">
+        <!-- Injected by JS -->
+      </div>
+    </section>
+
+    <!-- Sector pills -->
+    <section class="sectors-section">
+      <h2 class="section-label">Explore by Sector</h2>
+      <div class="sector-grid">
+        <button class="sector-card" onclick="filterAndGo('AgriTech')">
+          <span class="sector-emoji">🌾</span>
+          <span>AgriTech</span>
+        </button>
+        <button class="sector-card" onclick="filterAndGo('EdTech')">
+          <span class="sector-emoji">📚</span>
+          <span>EdTech</span>
+        </button>
+        <button class="sector-card" onclick="filterAndGo('FinTech')">
+          <span class="sector-emoji">💳</span>
+          <span>FinTech</span>
+        </button>
+        <button class="sector-card" onclick="filterAndGo('HealthTech')">
+          <span class="sector-emoji">🏥</span>
+          <span>HealthTech</span>
+        </button>
+        <button class="sector-card" onclick="filterAndGo('CleanTech')">
+          <span class="sector-emoji">♻️</span>
+          <span>CleanTech</span>
+        </button>
+        <button class="sector-card" onclick="filterAndGo('AI / ML')">
+          <span class="sector-emoji">🤖</span>
+          <span>AI / ML</span>
+        </button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────────────
+       PAGE 2: BROWSE / EXPLORE
+  ──────────────────────────────────────────────────────────────── -->
+  <div id="page-browse" class="page">
+    <div class="browse-header">
+      <div>
+        <h2 class="page-title">Explore Startups</h2>
+        <p class="page-sub">Discover India's next breakout companies</p>
+      </div>
+      <div class="browse-controls">
+        <div class="search-wrap">
+          <svg class="search-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          <input class="search-input" type="text" id="search-input" placeholder="Search startups..." oninput="renderStartups()" />
+        </div>
+        <select class="sort-select" id="sort-select" onchange="renderStartups()">
+          <option value="newest">Newest first</option>
+          <option value="popular">Most popular</option>
+          <option value="funding">Highest funding</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="filter-row">
+      <button class="filter-chip active" onclick="setFilter(this,'All')">All</button>
+      <button class="filter-chip" onclick="setFilter(this,'AgriTech')">🌾 AgriTech</button>
+      <button class="filter-chip" onclick="setFilter(this,'EdTech')">📚 EdTech</button>
+      <button class="filter-chip" onclick="setFilter(this,'FinTech')">💳 FinTech</button>
+      <button class="filter-chip" onclick="setFilter(this,'HealthTech')">🏥 HealthTech</button>
+      <button class="filter-chip" onclick="setFilter(this,'CleanTech')">♻️ CleanTech</button>
+      <button class="filter-chip" onclick="setFilter(this,'AI / ML')">🤖 AI / ML</button>
+    </div>
+
+    <div id="startups-grid" class="startups-grid"></div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────────────
+       PAGE 3: SUBMIT STARTUP
+  ──────────────────────────────────────────────────────────────── -->
+  <div id="page-submit" class="page">
+    <div class="form-layout">
+      <div class="form-sidebar">
+        <div class="sidebar-title">Pitch your startup</div>
+        <p class="sidebar-sub">Fill in the details and get in front of 500+ active investors on VentureHub.</p>
+        <div class="sidebar-steps">
+          <div class="step active" data-step="1">
+            <div class="step-num">1</div>
+            <div class="step-text">Basic info</div>
+          </div>
+          <div class="step" data-step="2">
+            <div class="step-num">2</div>
+            <div class="step-text">Details</div>
+          </div>
+          <div class="step" data-step="3">
+            <div class="step-num">3</div>
+            <div class="step-text">Submit</div>
+          </div>
+        </div>
+        <div class="sidebar-tip">
+          <span class="tip-icon">💡</span>
+          <span>Startups with detailed descriptions get <strong>3x more</strong> investor interest.</span>
+        </div>
+      </div>
+
+      <div class="form-main">
+        <!-- Step 1 -->
+        <div class="form-step active" id="step-1">
+          <h3 class="step-title">Basic Information</h3>
+          <div class="field-row">
+            <div class="field">
+              <label>Startup name <span class="req">*</span></label>
+              <input type="text" id="f-name" placeholder="e.g. AgroSense AI" />
+            </div>
+            <div class="field">
+              <label>Sector <span class="req">*</span></label>
+              <select id="f-sector">
+                <option value="">Choose sector</option>
+                <option>AgriTech</option><option>EdTech</option>
+                <option>FinTech</option><option>HealthTech</option>
+                <option>CleanTech</option><option>E-commerce</option>
+                <option>AI / ML</option><option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label>Description <span class="req">*</span></label>
+            <textarea id="f-desc" placeholder="Describe the problem you're solving, your solution, and target market..."></textarea>
+            <div class="char-count"><span id="desc-count">0</span>/500</div>
+          </div>
+          <button class="btn-step" onclick="goStep(2)">Next: Details →</button>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="form-step" id="step-2">
+          <h3 class="step-title">Funding & Team</h3>
+          <div class="field-row">
+            <div class="field">
+              <label>Funding required (₹ Lakhs) <span class="req">*</span></label>
+              <input type="number" id="f-fund" placeholder="e.g. 50" min="1" />
+            </div>
+            <div class="field">
+              <label>Stage</label>
+              <select id="f-stage">
+                <option>Idea stage</option><option>MVP ready</option>
+                <option>Early traction</option><option>Growth stage</option>
+              </select>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Founder name</label>
+              <input type="text" id="f-founder" placeholder="Your name" />
+            </div>
+            <div class="field">
+              <label>Founder email</label>
+              <input type="email" id="f-founder-email" placeholder="you@startup.com" />
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field">
+              <label>Location</label>
+              <input type="text" id="f-location" placeholder="City, State" />
+            </div>
+            <div class="field">
+              <label>Team size</label>
+              <input type="number" id="f-team" placeholder="e.g. 5" min="1" />
+            </div>
+          </div>
+          <div class="field">
+            <label>Website (optional)</label>
+            <input type="url" id="f-website" placeholder="https://yourstartup.com" />
+          </div>
+          <div class="form-nav">
+            <button class="btn-back" onclick="goStep(1)">← Back</button>
+            <button class="btn-step" onclick="goStep(3)">Review →</button>
+          </div>
+        </div>
+
+        <!-- Step 3: Review -->
+        <div class="form-step" id="step-3">
+          <h3 class="step-title">Review & Submit</h3>
+          <div class="review-card" id="review-card">
+            <!-- Filled by JS -->
+          </div>
+          <div class="form-nav">
+            <button class="btn-back" onclick="goStep(2)">← Edit</button>
+            <button class="submit-btn" id="submit-btn" onclick="submitStartup()">
+              <span id="submit-label">🚀 Submit Startup</span>
+            </button>
+          </div>
+          <div class="toast" id="submit-toast"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────────────
+       PAGE 4: INVESTORS
+  ──────────────────────────────────────────────────────────────── -->
+  <div id="page-investors" class="page">
+    <div class="page-header">
+      <h2 class="page-title">Active Investors</h2>
+      <p class="page-sub">Connect with angels and VCs actively looking for deals</p>
+    </div>
+
+    <div class="investors-grid" id="investors-grid">
+      <!-- Injected by JS -->
+    </div>
+
+    <!-- Register as investor CTA -->
+    <div class="investor-cta-box">
+      <div class="icta-content">
+        <h3>Are you an investor?</h3>
+        <p>Join 50+ angels and VCs discovering the next wave of Indian startups.</p>
+      </div>
+      <button class="btn-primary" onclick="toggleInvestorForm()">Register as Investor</button>
+    </div>
+
+    <div class="investor-form-wrap" id="investor-form-wrap" style="display:none">
+      <div class="form-card">
+        <h3>Register as Investor</h3>
+        <div class="field-row">
+          <div class="field"><label>Name *</label><input type="text" id="inv-name" placeholder="Your name" /></div>
+          <div class="field"><label>Firm</label><input type="text" id="inv-firm" placeholder="Firm / Angel Network" /></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label>Investment ticket</label>
+            <select id="inv-ticket">
+              <option>5-25L</option><option>10-50L</option>
+              <option>50-200L</option><option>1Cr+</option>
+            </select>
+          </div>
+          <div class="field"><label>Email</label><input type="email" id="inv-email" placeholder="you@firm.com" /></div>
+        </div>
+        <div class="field">
+          <label>Sectors of interest</label>
+          <div class="checkbox-group">
+            <label class="chk"><input type="checkbox" value="AgriTech" /> AgriTech</label>
+            <label class="chk"><input type="checkbox" value="EdTech" /> EdTech</label>
+            <label class="chk"><input type="checkbox" value="FinTech" /> FinTech</label>
+            <label class="chk"><input type="checkbox" value="HealthTech" /> HealthTech</label>
+            <label class="chk"><input type="checkbox" value="CleanTech" /> CleanTech</label>
+            <label class="chk"><input type="checkbox" value="AI / ML" /> AI / ML</label>
+          </div>
+        </div>
+        <button class="submit-btn" onclick="registerInvestor()">Register</button>
+        <div class="toast" id="inv-toast"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ────────────────────────────────────────────────────────────
+       PAGE 5: DASHBOARD / ANALYTICS
+  ──────────────────────────────────────────────────────────────── -->
+  <div id="page-dashboard" class="page">
+    <div class="page-header">
+      <h2 class="page-title">Platform Dashboard</h2>
+      <p class="page-sub">Live insights into VentureHub's ecosystem</p>
+    </div>
+
+    <!-- KPI row -->
+    <div class="kpi-row">
+      <div class="kpi-card">
+        <div class="kpi-icon">🚀</div>
+        <div class="kpi-val" id="kpi-startups">0</div>
+        <div class="kpi-label">Total Startups</div>
+        <div class="kpi-trend up">↑ Growing</div>
+      </div>
+      <div class="kpi-card kpi-green">
+        <div class="kpi-icon">❤️</div>
+        <div class="kpi-val" id="kpi-interests">0</div>
+        <div class="kpi-label">Total Interests</div>
+        <div class="kpi-trend up">↑ This week</div>
+      </div>
+      <div class="kpi-card kpi-amber">
+        <div class="kpi-icon">💰</div>
+        <div class="kpi-val" id="kpi-funding">₹0L</div>
+        <div class="kpi-label">Funding Sought</div>
+        <div class="kpi-trend up">↑ 12% MoM</div>
+      </div>
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-icon">👁️</div>
+        <div class="kpi-val" id="kpi-views">0</div>
+        <div class="kpi-label">Total Views</div>
+        <div class="kpi-trend up">↑ Today</div>
+      </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="charts-row">
+      <div class="chart-card">
+        <h3 class="chart-title">Startups by Sector</h3>
+        <div class="bar-chart" id="sector-chart"></div>
+      </div>
+      <div class="chart-card">
+        <h3 class="chart-title">Stage Distribution</h3>
+        <div class="donut-chart-wrap">
+          <canvas id="stage-donut" width="200" height="200"></canvas>
+          <div class="donut-legend" id="donut-legend"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Top startups table -->
+    <div class="table-card">
+      <h3 class="chart-title">Top Startups by Interest</h3>
+      <table class="data-table" id="top-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Startup</th><th>Sector</th>
+            <th>Stage</th><th>Funding</th><th>Interests</th>
+          </tr>
+        </thead>
+        <tbody id="top-table-body">
+          <!-- Injected by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Modal: Startup Detail ─────────────────────────────────── -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
+    <div class="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
